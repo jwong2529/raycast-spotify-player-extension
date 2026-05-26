@@ -2,6 +2,21 @@
    <img src="https://user-images.githubusercontent.com/372831/227213056-29a98faf-f897-4cd0-9c39-ca8f218a4190.png">
  </p>
 
+# Spotify Player (Custom Fork)
+
+Hi! This is a customized fork of the official Raycast Spotify Player extension, containing modifications to optimize playback workflows and the UI.
+
+### Custom Features in this Fork:
+* **Add to Queue as Primary Action**: Swaps the default priority of track selection in the Search view, making `Enter` queue the song instead of playing it immediately, with immediate play accessible via `opt + q`.
+* **Artwork and Profile Hiding**: Introduces a global preference (`hideArtwork`) to completely hide all album covers, artist pictures, and playlist thumbnails from the UI.
+* **Search History Opt-Out**: Adds a preference (`disableSearchHistory`) to turn off and clear search logs.
+
+Everything else is untouched.
+
+*— Janice*
+
+---
+
 Spotify's most common features, now at your fingertips. Search for music and podcasts, browse your library, and control the playback. Glance at what's currently playing directly from the menu bar.
 
 ## Commands
