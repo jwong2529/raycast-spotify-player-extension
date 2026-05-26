@@ -1,4 +1,14 @@
-import { Action, Clipboard, Keyboard, getPreferenceValues, Icon, popToRoot, showHUD, showToast, Toast } from "@raycast/api";
+import {
+  Action,
+  Clipboard,
+  Keyboard,
+  getPreferenceValues,
+  Icon,
+  popToRoot,
+  showHUD,
+  showToast,
+  Toast,
+} from "@raycast/api";
 import { play } from "../api/play";
 import { SimplifiedTrackObject } from "../helpers/spotify.api";
 import { getErrorMessage } from "../helpers/getError";

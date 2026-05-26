@@ -2,6 +2,7 @@ import { Icon, Image } from "@raycast/api";
 import { ArtistObject } from "../helpers/spotify.api";
 import { ListOrGridItem } from "./ListOrGridItem";
 import { ArtistActionPanel } from "./ArtistActionPanel";
+import { shouldHideArtwork } from "../helpers/shouldHideArtwork";
 
 type ArtistItemProps = {
   type: "grid" | "list";
@@ -9,10 +10,13 @@ type ArtistItemProps = {
 };
 
 export function ArtistItem({ type, artist }: ArtistItemProps) {
-  const icon: Image.ImageLike = {
-    source: artist?.images?.[0]?.url ?? Icon.Dot,
-    mask: Image.Mask.Circle,
-  };
+  const hideArtwork = shouldHideArtwork();
+  const icon: Image.ImageLike | undefined = hideArtwork
+    ? undefined
+    : {
+        source: artist?.images?.[0]?.url ?? Icon.Dot,
+        mask: Image.Mask.Circle,
+      };
 
   const title = `${artist.name}`;
 

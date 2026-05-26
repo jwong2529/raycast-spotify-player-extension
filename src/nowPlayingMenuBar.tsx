@@ -37,10 +37,12 @@ import { getErrorMessage } from "./helpers/getError";
 
 import { useSpotifyAppData } from "./hooks/useSpotifyAppData";
 import { seek } from "./api/seek";
+import { shouldHideArtwork } from "./helpers/shouldHideArtwork";
 
 function NowPlayingMenuBarCommand({ launchType }: LaunchProps) {
   const { hideArtistName, maxTextLength, iconType, cleanupTitle } =
     getPreferenceValues<Preferences.NowPlayingMenuBar>();
+  const hideArtwork = shouldHideArtwork();
 
   const [uriFromSpotify, setUriFromSpotify] = useCachedState<string | undefined>("currentlyPlayingUri", undefined);
 
@@ -240,7 +242,7 @@ function NowPlayingMenuBarCommand({ launchType }: LaunchProps) {
     <MenuBarExtra
       isLoading={spotifyAppDataIsLoading || currentlyPlayingIsLoading || currentlyPlayingIsLoading}
       icon={
-        iconType === "cover-image" && coverImageUrl
+        iconType === "cover-image" && coverImageUrl && !hideArtwork
           ? { source: coverImageUrl, mask: Image.Mask.RoundedRectangle }
           : { source: { dark: "menu-icon-dark.svg", light: "menu-icon-light.svg" } }
       }

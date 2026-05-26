@@ -2,6 +2,7 @@ import { Image, List } from "@raycast/api";
 import { formatMs } from "../helpers/formatMs";
 import { SimplifiedAlbumObject, SimplifiedTrackObject } from "../helpers/spotify.api";
 import { TrackActionPanel } from "./TrackActionPanel";
+import { shouldHideArtwork } from "../helpers/shouldHideArtwork";
 
 type TrackListItemProps = {
   track: SimplifiedTrackObject;
@@ -22,9 +23,10 @@ export default function TrackListItem({
 }: TrackListItemProps) {
   const title = track.name || "";
   const subtitle = track?.artists?.map((a) => a.name).join(", ");
+  const hideArtwork = shouldHideArtwork();
 
   let icon: Image.ImageLike | undefined = undefined;
-  if (album?.images) {
+  if (album?.images && !hideArtwork) {
     icon = {
       source: album.images[album.images.length - 1]?.url,
     };

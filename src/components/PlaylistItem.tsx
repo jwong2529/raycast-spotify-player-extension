@@ -2,6 +2,7 @@ import { Image, Icon } from "@raycast/api";
 import { SimplifiedPlaylistObject } from "../helpers/spotify.api";
 import { ListOrGridItem } from "./ListOrGridItem";
 import { PlaylistActionPanel } from "./PlaylistActionPanel";
+import { shouldHideArtwork } from "../helpers/shouldHideArtwork";
 
 type PlaylistItemProps = {
   type: "grid" | "list";
@@ -13,9 +14,12 @@ export default function PlaylistItem({ type, playlist, actions }: PlaylistItemPr
   const title = playlist.name as string;
   const subtitle = playlist?.owner?.display_name ?? undefined;
   const imageURL = playlist?.images?.[playlist.images.length - 1]?.url;
-  const icon: Image.ImageLike = {
-    source: imageURL ?? Icon.BlankDocument,
-  };
+  const hideArtwork = shouldHideArtwork();
+  const icon: Image.ImageLike | undefined = hideArtwork
+    ? undefined
+    : {
+        source: imageURL ?? Icon.BlankDocument,
+      };
   actions = actions ?? <PlaylistActionPanel title={title} playlist={playlist} />;
 
   return (

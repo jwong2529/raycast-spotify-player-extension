@@ -6,6 +6,7 @@ import { PlayAction } from "./PlayAction";
 import { TracksList } from "./TracksList";
 import { useYourLibrary } from "../hooks/useYourLibrary";
 import { ShowContent } from "../shortcuts/shortcuts";
+import { shouldHideArtwork } from "../helpers/shouldHideArtwork";
 
 type PlaylistLikedTracksItemProps = {
   type: "grid" | "list";
@@ -14,7 +15,10 @@ type PlaylistLikedTracksItemProps = {
 export default function PlaylistLikedTracksItem({ type }: PlaylistLikedTracksItemProps) {
   const { meData } = useMe();
   const title = "Liked Songs";
-  const icon: Image.ImageLike = { source: "https://misc.scdn.co/liked-songs/liked-songs-64.png" };
+  const hideArtwork = shouldHideArtwork();
+  const icon: Image.ImageLike | undefined = hideArtwork
+    ? undefined
+    : { source: "https://misc.scdn.co/liked-songs/liked-songs-64.png" };
   const uri = `spotify:user:${meData?.id}:collection`;
   const { myLibraryData } = useYourLibrary({
     keepPreviousData: true,

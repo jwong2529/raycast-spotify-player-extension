@@ -2,6 +2,7 @@ import { Image, List } from "@raycast/api";
 import { formatMs } from "../helpers/formatMs";
 import { ShowBase, SimplifiedEpisodeObject } from "../helpers/spotify.api";
 import { EpisodeActionPanel } from "./EpisodeActionPanel";
+import { shouldHideArtwork } from "../helpers/shouldHideArtwork";
 
 type EpisodeListItemProps = {
   episode: SimplifiedEpisodeObject;
@@ -10,16 +11,19 @@ type EpisodeListItemProps = {
 
 export default function EpisodeListItem({ episode, show }: EpisodeListItemProps) {
   const title = episode.name || "";
+  const hideArtwork = shouldHideArtwork();
 
   let icon: Image.ImageLike | undefined = undefined;
-  if (show?.images) {
-    icon = {
-      source: show.images[show.images.length - 1]?.url,
-    };
-  } else if (episode.images) {
-    icon = {
-      source: episode.images[episode.images.length - 1]?.url,
-    };
+  if (!hideArtwork) {
+    if (show?.images) {
+      icon = {
+        source: show.images[show.images.length - 1]?.url,
+      };
+    } else if (episode.images) {
+      icon = {
+        source: episode.images[episode.images.length - 1]?.url,
+      };
+    }
   }
 
   return (

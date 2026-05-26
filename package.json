@@ -68,6 +68,14 @@
       "label": "Close window on action",
       "default": false,
       "required": false
+    },
+    {
+      "name": "hideArtwork",
+      "description": "If enabled, album artwork and artist profile pictures will be hidden across the UI",
+      "type": "checkbox",
+      "label": "Hide album artwork and artist profile pictures",
+      "default": false,
+      "required": false
     }
   ],
   "commands": [

@@ -36,6 +36,7 @@ import { PauseAction } from "./components/PauseAction";
 import { getErrorMessage } from "./helpers/getError";
 import { triggerMenuBarRefresh } from "./helpers/triggerMenuBarRefresh";
 import { ConnectDevice, Dislike, Like, OpenLibrary, OpenSearch, ShowContent } from "./shortcuts/shortcuts";
+import { shouldHideArtwork } from "./helpers/shouldHideArtwork";
 
 function NowPlayingCommand() {
   const { currentlyPlayingData, currentlyPlayingIsLoading, currentlyPlayingRevalidate } = useCurrentlyPlaying();
@@ -50,7 +51,8 @@ function NowPlayingCommand() {
   const { containsMySavedTracksData, containsMySavedTracksRevalidate } = useContainsMyLikedTracks({
     trackIds: currentlyPlayingData?.item?.id ? [currentlyPlayingData?.item?.id] : [],
   });
-  const { closeWindowOnAction } = getPreferenceValues<{ closeWindowOnAction?: boolean }>();
+  const { closeWindowOnAction } = getPreferenceValues<ExtensionPreferences>();
+  const hideArtwork = shouldHideArtwork();
 
   const trackAlreadyLiked = containsMySavedTracksData?.[0];
   const isPlaying = currentlyPlayingData?.is_playing;
@@ -111,7 +113,7 @@ function NowPlayingCommand() {
       `# ${name}`,
       `by ${artistName}`,
       "",
-      albumImage ? `![${name}](${albumImage}?raycast-width=250&raycast-height=250)` : "",
+      albumImage && !hideArtwork ? `![${name}](${albumImage}?raycast-width=250&raycast-height=250)` : "",
     ].join("\n");
 
     metadata = (
@@ -279,7 +281,7 @@ function NowPlayingCommand() {
       `# ${showName}`,
       name,
       "",
-      image ? `![${name}](${image}?raycast-width=250&raycast-height=250)` : "",
+      image && !hideArtwork ? `![${name}](${image}?raycast-width=250&raycast-height=250)` : "",
       "",
       description,
     ].join("\n");

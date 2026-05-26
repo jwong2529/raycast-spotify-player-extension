@@ -2,13 +2,17 @@ import { Icon, Image } from "@raycast/api";
 import { SimplifiedShowObject } from "../helpers/spotify.api";
 import { ShowActionPanel } from "./ShowActionPanel";
 import { ListOrGridItem } from "./ListOrGridItem";
+import { shouldHideArtwork } from "../helpers/shouldHideArtwork";
 
 type ShowItemProps = { type: "grid" | "list"; show: SimplifiedShowObject };
 
 export function ShowItem({ type, show }: ShowItemProps) {
-  const icon: Image.ImageLike = {
-    source: show.images[0]?.url ?? Icon.Dot,
-  };
+  const hideArtwork = shouldHideArtwork();
+  const icon: Image.ImageLike | undefined = hideArtwork
+    ? undefined
+    : {
+        source: show.images[0]?.url ?? Icon.Dot,
+      };
 
   const title = show.name;
 
