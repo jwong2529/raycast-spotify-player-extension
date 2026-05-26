@@ -40,7 +40,7 @@ type FilterValue = keyof typeof filters;
 
 function SearchCommand({ initialSearchText }: { initialSearchText?: string }) {
   let { topView } = getPreferenceValues<Preferences.Search>();
-  const { musicOnly } = getPreferenceValues<Preferences.Search>();
+  const { musicOnly, disableSearchHistory } = getPreferenceValues<Preferences.Search>();
 
   if (musicOnly && musicOnlyIgnoredFilters.includes(topView)) {
     topView = "artists";
@@ -62,6 +62,9 @@ function SearchCommand({ initialSearchText }: { initialSearchText?: string }) {
   const recentSearches: string[] = recentSearchesData ? JSON.parse(recentSearchesData) : [];
 
   useEffect(() => {
+    if (disableSearchHistory) {
+      return;
+    }
     if (searchText.length > 3 && recentSearches.includes(searchText.trim()) === false && searchIsLoading === false) {
       const addSearchToStorage = debounce(async () => {
         LocalStorage.setItem("recent-searches", JSON.stringify([searchText, ...recentSearches]));
@@ -69,7 +72,7 @@ function SearchCommand({ initialSearchText }: { initialSearchText?: string }) {
       }, 3000);
       addSearchToStorage();
     }
-  }, [searchText, searchIsLoading]);
+  }, [searchText, searchIsLoading, disableSearchHistory]);
 
   const sharedProps: ComponentProps<typeof List> = {
     searchBarPlaceholder: "What do you want to listen to",
@@ -83,61 +86,67 @@ function SearchCommand({ initialSearchText }: { initialSearchText?: string }) {
     return (
       <List {...sharedProps}>
         <List.EmptyView title="What do you want to listen to?" />
-        <List.Section title="Recent searches">
-          {recentSearches.map(
-            (search, index) =>
-              index < 10 && (
-                <List.Item
-                  key={search}
-                  title={search}
-                  actions={
-                    <ActionPanel>
-                      <Action icon={Icon.MagnifyingGlass} title="Search Again" onAction={() => setSearchText(search)} />
-                      <ActionPanel.Section>
+        {!disableSearchHistory && (
+          <List.Section title="Recent searches">
+            {recentSearches.map(
+              (search, index) =>
+                index < 10 && (
+                  <List.Item
+                    key={search}
+                    title={search}
+                    actions={
+                      <ActionPanel>
                         <Action
-                          icon={Icon.Trash}
-                          title="Remove Search"
-                          style={Action.Style.Destructive}
-                          shortcut={Keyboard.Shortcut.Common.Remove}
-                          onAction={async () => {
-                            await LocalStorage.setItem(
-                              "recent-searches",
-                              JSON.stringify(recentSearches.filter((item: string) => item !== search)),
-                            );
-                            recentSearchRevalidate();
-                          }}
+                          icon={Icon.MagnifyingGlass}
+                          title="Search Again"
+                          onAction={() => setSearchText(search)}
                         />
-                        <Action
-                          icon={Icon.Trash}
-                          title="Remove All Searches"
-                          style={Action.Style.Destructive}
-                          shortcut={Keyboard.Shortcut.Common.RemoveAll}
-                          onAction={async () => {
-                            await confirmAlert({
-                              title: "Are you sure?",
-                              message: "This will remove all recent searches.",
-                              primaryAction: {
-                                title: "Remove",
-                                style: Alert.ActionStyle.Destructive,
-                                onAction: async () => {
-                                  await LocalStorage.setItem("recent-searches", JSON.stringify([]));
-                                  recentSearchRevalidate();
+                        <ActionPanel.Section>
+                          <Action
+                            icon={Icon.Trash}
+                            title="Remove Search"
+                            style={Action.Style.Destructive}
+                            shortcut={Keyboard.Shortcut.Common.Remove}
+                            onAction={async () => {
+                              await LocalStorage.setItem(
+                                "recent-searches",
+                                JSON.stringify(recentSearches.filter((item: string) => item !== search)),
+                              );
+                              recentSearchRevalidate();
+                            }}
+                          />
+                          <Action
+                            icon={Icon.Trash}
+                            title="Remove All Searches"
+                            style={Action.Style.Destructive}
+                            shortcut={Keyboard.Shortcut.Common.RemoveAll}
+                            onAction={async () => {
+                              await confirmAlert({
+                                title: "Are you sure?",
+                                message: "This will remove all recent searches.",
+                                primaryAction: {
+                                  title: "Remove",
+                                  style: Alert.ActionStyle.Destructive,
+                                  onAction: async () => {
+                                    await LocalStorage.setItem("recent-searches", JSON.stringify([]));
+                                    recentSearchRevalidate();
+                                  },
                                 },
-                              },
-                              dismissAction: {
-                                title: "Cancel",
-                              },
-                              rememberUserChoice: true,
-                            });
-                          }}
-                        />
-                      </ActionPanel.Section>
-                    </ActionPanel>
-                  }
-                />
-              ),
-          )}
-        </List.Section>
+                                dismissAction: {
+                                  title: "Cancel",
+                                },
+                                rememberUserChoice: true,
+                              });
+                            }}
+                          />
+                        </ActionPanel.Section>
+                      </ActionPanel>
+                    }
+                  />
+                ),
+            )}
+          </List.Section>
+        )}
       </List>
     );
   }

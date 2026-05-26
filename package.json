@@ -76,6 +76,14 @@
       "label": "Hide album artwork and artist profile pictures",
       "default": false,
       "required": false
+    },
+    {
+      "name": "disableSearchHistory",
+      "description": "If enabled, search history will be disabled and cleared from the root search view",
+      "type": "checkbox",
+      "label": "Disable search history",
+      "default": false,
+      "required": false
     }
   ],
   "commands": [
