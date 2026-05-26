@@ -35,7 +35,7 @@ export function TrackActionPanel({
 
   return (
     <ActionPanel>
-      <PlayAction id={track.id as string} type="track" playingContext={playingContext} tracksToQueue={tracksToQueue} />
+      {track.uri && <AddToQueueAction uri={track.uri} title={title} shortcut={undefined} />}
       {album && showGoToAlbum && (
         <Action.Push
           icon={Icon.AppWindowList}
@@ -46,7 +46,16 @@ export function TrackActionPanel({
       )}
       <StartRadioAction trackId={track.id} />
       {showAddToSaved && <AddToSavedTracksAction trackId={track.id} />}
-      {track.uri && <AddToQueueAction uri={track.uri} title={title} />}
+      <PlayAction
+        id={track.id as string}
+        type="track"
+        playingContext={playingContext}
+        tracksToQueue={tracksToQueue}
+        shortcut={{
+          macOS: { modifiers: ["opt"], key: "q" },
+          Windows: { modifiers: ["alt"], key: "q" },
+        }}
+      />
       {myPlaylistsData?.items && meData && track.uri && (
         <AddToPlaylistAction playlists={myPlaylistsData.items} meData={meData} uri={track.uri} />
       )}

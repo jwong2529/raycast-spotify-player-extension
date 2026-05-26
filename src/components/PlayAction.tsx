@@ -1,4 +1,4 @@
-import { Action, Clipboard, getPreferenceValues, Icon, popToRoot, showHUD, showToast, Toast } from "@raycast/api";
+import { Action, Clipboard, Keyboard, getPreferenceValues, Icon, popToRoot, showHUD, showToast, Toast } from "@raycast/api";
 import { play } from "../api/play";
 import { SimplifiedTrackObject } from "../helpers/spotify.api";
 import { getErrorMessage } from "../helpers/getError";
@@ -10,9 +10,10 @@ type PlayActionProps = {
   playingContext?: string;
   onPlay?: () => void;
   tracksToQueue?: SimplifiedTrackObject[];
+  shortcut?: Keyboard.Shortcut;
 };
 
-export function PlayAction({ id, type, playingContext, onPlay, tracksToQueue }: PlayActionProps) {
+export function PlayAction({ id, type, playingContext, onPlay, tracksToQueue, shortcut }: PlayActionProps) {
   const { closeWindowOnAction } = getPreferenceValues<ExtensionPreferences>();
 
   const handlePlayAction = async () => {
@@ -55,5 +56,5 @@ export function PlayAction({ id, type, playingContext, onPlay, tracksToQueue }: 
     }
   };
 
-  return <Action icon={Icon.Play} title="Play" onAction={handlePlayAction} />;
+  return <Action icon={Icon.Play} title="Play" onAction={handlePlayAction} shortcut={shortcut} />;
 }
