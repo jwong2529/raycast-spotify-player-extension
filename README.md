@@ -7,13 +7,56 @@
 Hi! This is a customized fork of the official Raycast Spotify Player extension, containing modifications to optimize playback workflows and the UI.
 
 ### Custom Features in this Fork:
-* **Add to Queue as Primary Action**: Swaps the default priority of track selection in the Search view, making `Enter` queue the song instead of playing it immediately, with immediate play accessible via `opt + q`.
-* **Artwork and Profile Hiding**: Introduces a global preference (`hideArtwork`) to completely hide all album covers, artist pictures, and playlist thumbnails from the UI.
-* **Search History Opt-Out**: Adds a preference (`disableSearchHistory`) to turn off and clear search logs.
+
+- **Add to Queue as Primary Action**: Swaps the default priority of track selection in the Search view, making `Enter` queue the song instead of playing it immediately, with immediate play accessible via `opt + q`.
+- **Artwork and Profile Hiding**: Introduces a global preference (`hideArtwork`) to completely hide all album covers, artist pictures, and playlist thumbnails from the UI.
+- **Search History Opt-Out**: Adds a preference (`disableSearchHistory`) to turn off and clear search logs.
 
 Everything else is untouched.
 
-*— Janice*
+_— Janice_
+
+---
+
+## Upstream Sync Procedure
+
+Since this repository is an isolated fork of a subfolder within the [raycast/extensions monorepo](https://github.com/raycast/extensions/tree/main/extensions/spotify-player), standard `git pull` from the upstream monorepo cannot be used directly.
+
+To keep this fork updated with official releases without losing custom modifications, follow this:
+
+### Branch Structure
+
+- **`upstream`**: Tracks the pristine, unmodified official code from `raycast/extensions/extensions/spotify-player`.
+- **`main`**: Contains the customized fork (upstream code + custom modifications).
+
+### Step-by-Step Sync Workflow
+
+1. **Download latest official files:**  
+   Download the `extensions/spotify-player` folder from the Raycast repository using sparse checkout:
+
+   ```bash
+   rm -rf /tmp/raycast-extensions && git clone --depth 1 --filter=blob:none --no-checkout https://github.com/raycast/extensions.git /tmp/raycast-extensions
+   cd /tmp/raycast-extensions && git sparse-checkout init --cone && git sparse-checkout set extensions/spotify-player && git checkout main
+   ```
+
+2. **Update the `upstream` branch:**
+
+   ```bash
+   cd ~/repos/raycast-spotify
+   git checkout upstream
+   rsync -av --delete --exclude=".git" --exclude="MY_CHANGES.md" --exclude="node_modules" /tmp/raycast-extensions/extensions/spotify-player/ ./
+   git add -A
+   git commit -m "Sync official spotify-player from raycast/extensions"
+   ```
+
+3. **Merge or Rebase into `main`:**
+   ```bash
+   git checkout main
+   git merge upstream
+   ```
+
+   - Files that only changed upstream update automatically.
+   - For files with custom features (e.g., `TrackActionPanel.tsx`, `PlaylistItem.tsx`, `nowPlaying.tsx`, `package.json`), review against the Change Ledger above to ensure customizations remain intact.
 
 ---
 
