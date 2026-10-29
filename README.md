@@ -42,7 +42,6 @@ To keep this fork updated with official releases without losing custom modificat
 2. **Update the `upstream` branch:**
 
    ```bash
-   cd ~/repos/raycast-spotify
    git checkout upstream
    rsync -av --delete --exclude=".git" --exclude="MY_CHANGES.md" --exclude="node_modules" /tmp/raycast-extensions/extensions/spotify-player/ ./
    git add -A
