@@ -57,6 +57,10 @@ To keep this fork updated with official releases without losing custom modificat
    - Files that only changed upstream update automatically.
    - For files with custom features (e.g., `TrackActionPanel.tsx`, `PlaylistItem.tsx`, `nowPlaying.tsx`, `package.json`), review against the Change Ledger above to ensure customizations remain intact.
 
+4. **Update extension**
+   ```bash
+   npm run build
+   ```
 ---
 
 Spotify's most common features, now at your fingertips. Search for music and podcasts, browse your library, and control the playback. Glance at what's currently playing directly from the menu bar.
